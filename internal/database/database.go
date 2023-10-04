@@ -11,9 +11,9 @@ import (
 
 
 func InitDatabaseConnection (config config.DatabaseConfig) (*gorm.DB, error)  {
-	connectionString := fmt.Sprintf("host:%s port=%s dbname=%s user=%s password=%s sslmode=disabl", config.Host, config.Port, config.DBName, config.User, config.Password)
+	connectionString := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable", config.Host, config.User, config.Password, config.DBName, config.Port)
 
-	// connect to database using gorm
+	// initialize connection to database using gorm
 	database, err := gorm.Open(postgres.Open(connectionString), &gorm.Config{})
 
 	if err != nil {
