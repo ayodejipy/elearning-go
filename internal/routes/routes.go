@@ -1,18 +1,17 @@
 package routes
 
 import (
-	"net/http"
-
+	"github.com/ayodejipy/elearning-go/internal/database"
 	"github.com/ayodejipy/elearning-go/internal/handlers"
 	"github.com/go-chi/chi/v5"
 )
 
-func NewRouter() http.Handler {
-	r := chi.NewRouter()
+func SetupRoutes(r *chi.Mux, db *database.DBConn) {
+	// bind handler to database
+	courseHandler := handlers.CoursesHandler(db)
 
 	// declare routes
 	r.Get("/", handlers.GetHelloHandler)
 
-
-	return r // return the router instance
+	r.Get("/courses", courseHandler.GetAllCourses)
 }
