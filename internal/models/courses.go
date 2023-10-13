@@ -6,7 +6,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type Courses struct {
+type Course struct {
 	gorm.Model
 
 	Title string `json:"title"`

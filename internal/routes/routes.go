@@ -14,4 +14,5 @@ func SetupRoutes(r *chi.Mux, db *database.DBConn) {
 	r.Get("/", handlers.GetHelloHandler)
 
 	r.Get("/courses", courseHandler.GetAllCourses)
+	r.Post("/courses/add", courseHandler.AddCourse)
 }

@@ -10,14 +10,14 @@ import (
 )
 
 type DBConn struct {
-	*gorm.DB
+	DB *gorm.DB
 }
 
 func InitDatabaseConnection (config config.DatabaseConfig) (*DBConn)  {
 	connectionString := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable", config.Host, config.User, config.Password, config.DBName, config.Port)
 
 	// initialize connection to database using gorm
-	database, err := gorm.Open(postgres.Open(connectionString), &gorm.Config{})
+	DB, err := gorm.Open(postgres.Open(connectionString), &gorm.Config{})
 
 	// catch("Unable to connect to database.", err)
 	if err != nil {
@@ -28,7 +28,7 @@ func InitDatabaseConnection (config config.DatabaseConfig) (*DBConn)  {
 
 	fmt.Println("Database connection established.")
 	// return database
-	return &DBConn{database}
+	return &DBConn{DB}
 }
 
 

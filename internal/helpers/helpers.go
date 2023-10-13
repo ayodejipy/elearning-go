@@ -6,19 +6,11 @@ import (
 	"net/http"
 )
 
-// type BaseResponse struct {
-// 	Success bool `json:"success"`
-// 	Data interface{} `json:"data"`
-// }
-
-// type SuccessResponse struct {
-// 	BaseResponse
-// }
-
-// type ErrResponse struct {
-// 	Message string `json:"message"`
-// 	BaseResponse
-// }
+type BaseResponse struct {
+	Success bool `json:"success"`
+	Message string `json:"message"`
+	Data interface{} `json:"data,omitempty"`
+}
 
 func catch(msg string, err error) {
     if err != nil {
@@ -27,7 +19,7 @@ func catch(msg string, err error) {
 }
 
 // respondWithJSON responds with JSON
-func RespondWithJSON(w http.ResponseWriter, code int, payload interface{}) {
+func RespondWithJSON(w http.ResponseWriter, code int, payload BaseResponse) {
 	// encodes payload into JSON
 	response, err := json.Marshal(payload)
 
@@ -43,5 +35,5 @@ func RespondWithJSON(w http.ResponseWriter, code int, payload interface{}) {
 }
 
 func RespondWithError(w http.ResponseWriter, code int, msg string) {
-	RespondWithJSON(w, code, map[string]string{"message": msg})
+	RespondWithJSON(w, code, BaseResponse{ Success: false, Message: msg})
 }
