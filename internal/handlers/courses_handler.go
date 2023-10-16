@@ -21,7 +21,7 @@ func CoursesHandler(db *database.DBConn) *Handler {
 	return &Handler{db}
 }
 
-// GET: Fetch all courses
+// GET: /courses: Fetch all courses
 func (con *Handler) GetAllCourses(w http.ResponseWriter, r *http.Request) {
 	courses := []models.Course{}
 
@@ -38,7 +38,7 @@ func (con *Handler) GetAllCourses(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-// POST: Adds a new course to database
+// POST: /course/create Adds a new course to database
 func (con *Handler) AddCourse(w http.ResponseWriter, r *http.Request) {
 	// make an empty course struct/object
 	course := models.Course{}
@@ -68,7 +68,7 @@ func (con *Handler) AddCourse(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-// GET: Get course by id
+// GET: /course/{id}
 func (con *Handler) GetCourseById(w http.ResponseWriter, r *http.Request) {
 	course := models.Course{}
 
