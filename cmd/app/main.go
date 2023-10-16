@@ -33,7 +33,7 @@ func main() {
 	addr := fmt.Sprintf(":%s", port)
 
 	// run server
-	fmt.Printf("Server started and running on http://localhost/%s \n", addr);
+	fmt.Printf("Server started and running on http://localhost%s \n", addr);
 
 	log.Fatal(http.ListenAndServe(addr, r))
 }
