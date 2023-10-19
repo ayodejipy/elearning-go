@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"github.com/ayodejipy/elearning-go/internal/database"
@@ -24,8 +23,6 @@ func (con *Handler) RegisterUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Printf("Decoded user: %v", user)
-
 	// hash user password
 	hash, err := bcrypt.GenerateFromPassword([]byte(user.Password), 10)
 	if err != nil {
@@ -36,7 +33,7 @@ func (con *Handler) RegisterUser(w http.ResponseWriter, r *http.Request) {
 	user.Password = string(hash)
 
 	// save to database
-	if err := con.DB.Create(&user).Error; err != nil {
+	if err := con.DB.Omit("id").Create(&user).Error; err != nil {
 		helpers.RespondWithError(w, http.StatusBadRequest, "Failed to create user.")
 		return
 	}
