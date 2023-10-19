@@ -2,12 +2,10 @@ package models
 
 import (
 	"time"
-
-	"gorm.io/gorm"
 )
 
 type Course struct {
-	gorm.Model
+	BaseModel
 
 	Title string `json:"title"`
 	Description string `json:"description"`

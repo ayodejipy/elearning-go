@@ -23,6 +23,7 @@ func main() {
 	// load config and init a connection to database
 	config := config.LoadConfig()
 	db := database.InitDatabaseConnection(*config)
+	database.SyncDatabase(db)
 
 
 	// init a new chi router instance

@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/ayodejipy/elearning-go/internal/config"
+	"github.com/ayodejipy/elearning-go/internal/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -12,6 +13,7 @@ import (
 type DBConn struct {
 	DB *gorm.DB
 }
+
 
 func InitDatabaseConnection (config config.DatabaseConfig) (*DBConn)  {
 	connectionString := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable", config.Host, config.User, config.Password, config.DBName, config.Port)
@@ -32,3 +34,6 @@ func InitDatabaseConnection (config config.DatabaseConfig) (*DBConn)  {
 }
 
 
+func SyncDatabase(db *DBConn) {
+	db.DB.AutoMigrate(&models.Course{}, &models.User{})
+}
