@@ -23,4 +23,5 @@ func SetupRoutes(r *chi.Mux, db *database.DBConn) {
 	
 	// Auth routes
 	r.Post("/auth/signup", userHandler.RegisterUser)
+	r.Post("/auth/signin", userHandler.Login)
 }
