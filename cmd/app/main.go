@@ -11,7 +11,10 @@ import (
 	"github.com/ayodejipy/elearning-go/internal/routes"
 	"github.com/go-chi/chi/v5"
 	"github.com/joho/godotenv"
+	"gorm.io/gorm"
 )
+
+var db *gorm.DB
 
 func main() {
 	// load env file

@@ -56,8 +56,8 @@ func (con *Handler) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// get user from database
-	var user *models.User
-	if err := con.DB.Where("email = ?", user.Email).First(&user).Error; err != nil {
+	var user models.User
+	if err := con.DB.Where("email = ?", body.Email).First(&user).Error; err != nil {
 		helpers.RespondWithError(w, http.StatusBadRequest, "User with email not found.")
 		return
 	}
@@ -70,24 +70,47 @@ func (con *Handler) Login(w http.ResponseWriter, r *http.Request) {
 
 	// Generate a new jwt token
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"sub": user.ID,
+		"sub": user.Email,
 		"exp": time.Now().Add(time.Hour * 24 * 30).Unix(),
 	})
 
 	// Sign and get the complete encoded token as a string using the secret
-	tokenString, err := token.SignedString(os.Getenv("JWT_SECRET"))
+	tokenString, err := token.SignedString([]byte(os.Getenv("JWT_SECRET")))
 	if err != nil {
 		helpers.RespondWithError(w, http.StatusBadRequest, "Failed to create token")
 		return
 	}
 
+	// save tokenstring to cookie
+	cookie := http.Cookie{
+		Name: "Authorization",
+		Value: tokenString,
+		SameSite: http.SameSiteLaxMode,
+		MaxAge: 3600 * 24 * 30,
+		Secure: false, // true in prod
+		Path: "/",
+		Domain: "",
+		HttpOnly: true,
+	}
+	http.SetCookie(w, &cookie)
+
 
 	// send jwt token back
 	helpers.RespondWithJSON(w, http.StatusOK, helpers.BaseResponse{
-		Message: "Login successful",
-		Data: map[string]string{
-			"token": tokenString,
-		},
+		Success: true,
+		Message: "User logged in successfully.",
 	})
 
+}
+
+func (con *Handler) Validate(w http.ResponseWriter, r *http.Request) {
+	// read our user on the context
+	user := r.Context().Value("user").(models.User)
+	
+	// send jwt token back
+	helpers.RespondWithJSON(w, http.StatusOK, helpers.BaseResponse{
+		Success: true,
+		Message: "Request verified successfully.",
+		Data: user.Username,
+	})
 }
