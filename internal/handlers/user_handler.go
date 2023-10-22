@@ -30,6 +30,7 @@ func (con *Handler) RegisterUser(w http.ResponseWriter, r *http.Request) {
 	hash, err := bcrypt.GenerateFromPassword([]byte(user.Password), 10)
 	if err != nil {
 		helpers.RespondWithError(w, http.StatusBadRequest, "Cannot hash password.")
+		return
 	}
 
 	// update password to hashed password
@@ -70,7 +71,7 @@ func (con *Handler) Login(w http.ResponseWriter, r *http.Request) {
 
 	// Generate a new jwt token
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"sub": user.Email,
+		"sub": user.ID,
 		"exp": time.Now().Add(time.Hour * 24 * 30).Unix(),
 	})
 
@@ -81,7 +82,7 @@ func (con *Handler) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// save tokenstring to cookie
+	// we have tokenString here: save tokenstring to cookie
 	cookie := http.Cookie{
 		Name: "Authorization",
 		Value: tokenString,

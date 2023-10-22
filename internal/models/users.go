@@ -1,6 +1,7 @@
 package models
 
 type User struct {
+	UserId
 	BaseModel
 
 	Username string `json:"username"`

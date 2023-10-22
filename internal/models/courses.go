@@ -5,6 +5,7 @@ import (
 )
 
 type Course struct {
+	DataID
 	BaseModel
 
 	Title string `json:"title"`

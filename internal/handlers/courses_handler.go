@@ -26,8 +26,8 @@ func (con *Handler) GetAllCourses(w http.ResponseWriter, r *http.Request) {
 	courses := []models.Course{}
 
 	if err := con.DB.Find(&courses).Error; err != nil {
-		fmt.Errorf("error fetching all courses: %v", err)
 		helpers.RespondWithError(w, http.StatusBadRequest, "Unable to fetch all courses")
+		return
 	}
 	
 	// respond with the data
@@ -99,7 +99,6 @@ func (con *Handler) UpdateCourse(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(&course)
 	if err != nil {
 		helpers.RespondWithError(w, http.StatusInternalServerError, "Cannot parse request as JSON")
-		fmt.Printf("Cannot decode request body: %v \n", err)
 		return 
 	}
 
@@ -114,6 +113,7 @@ func (con *Handler) UpdateCourse(w http.ResponseWriter, r *http.Request) {
 	}).Error; err != nil {
 		fmt.Errorf("error updating course: %v", err)
 		helpers.RespondWithError(w, http.StatusBadRequest, "Unable to update courses")
+		return
 	}
 
 	helpers.RespondWithJSON(w, http.StatusOK, helpers.BaseResponse{
