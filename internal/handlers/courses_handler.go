@@ -111,7 +111,6 @@ func (con *Handler) UpdateCourse(w http.ResponseWriter, r *http.Request) {
 		StartDate: course.StartDate,
 		EndDate: course.EndDate,
 	}).Error; err != nil {
-		fmt.Errorf("error updating course: %v", err)
 		helpers.RespondWithError(w, http.StatusBadRequest, "Unable to update courses")
 		return
 	}

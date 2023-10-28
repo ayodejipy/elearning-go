@@ -115,3 +115,35 @@ func (con *Handler) Validate(w http.ResponseWriter, r *http.Request) {
 		Data: user.Username,
 	})
 }
+
+// 
+func (con *Handler) BecomeTutor(w http.ResponseWriter, r *http.Request) {
+	// make an empty tutor struct
+	tutor := models.Tutors{}
+	// get user from req context
+	user := r.Context().Value("user").(models.User)
+	
+	// add data to tutor's table
+	if err := con.DB.Model(&user).Updates(models.User{
+		Role: models.TutorRole,
+	}).Error; err != nil {
+		helpers.RespondWithError(w, http.StatusBadRequest, "Failed to update user role")
+		return
+	}
+
+	// update tutor details
+	tutor.UserId = user.ID
+	tutor.CreatedAt = time.Now()
+
+	// add data to tutor's table
+	if err := con.DB.Create(&tutor).Error; err != nil {
+		helpers.RespondWithError(w, http.StatusBadRequest, "Failed to create tutor")
+		return
+	}
+
+
+	helpers.RespondWithJSON(w, http.StatusCreated, helpers.BaseResponse{
+		Success: true,
+		Message: "Tutor created successfully",
+	})
+}

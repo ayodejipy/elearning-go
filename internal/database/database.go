@@ -35,5 +35,5 @@ func InitDatabaseConnection (config config.DatabaseConfig) (*DBConn)  {
 
 
 func SyncDatabase(db *DBConn) {
-	db.DB.AutoMigrate(&models.Course{}, &models.User{})
+	db.DB.AutoMigrate(&models.Course{}, &models.User{}, &models.Tutors{})
 }

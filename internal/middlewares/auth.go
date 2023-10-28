@@ -20,8 +20,7 @@ func VerifyAuth(db *database.DBConn) func(http.Handler) http.Handler {
 			// get cookie off the request r context
 			tokenString, err := r.Cookie("Authorization")
 			if err != nil {
-				fmt.Println(err)
-				helpers.RespondWithError(w, http.StatusUnauthorized, "User not authorized: getting cookie")
+				helpers.RespondWithError(w, http.StatusUnauthorized, "User not authorized")
 				return
 			}
 
