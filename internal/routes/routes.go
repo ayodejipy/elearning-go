@@ -36,6 +36,7 @@ func SetupRoutes(r *chi.Mux, db *database.DBConn) {
     // Require Authentication
     r.Group(func(r chi.Router) {
 		r.Use(middlewares.VerifyAuth(db))
+		r.Use(middlewares.TutorMiddleware)
 
 		r.Get("/validate", userHandler.Validate)
 
