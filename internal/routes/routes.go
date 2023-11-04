@@ -31,6 +31,9 @@ func SetupRoutes(r *chi.Mux, db *database.DBConn) {
 	r.Post("/auth/signup", userHandler.RegisterUser)
 	r.Post("/auth/signin", userHandler.Login)
 	
+	r.Get("/courses", courseHandler.GetAllCourses)
+	r.Get("/course/{id}", courseHandler.GetCourseById)
+	r.Get("/courses/{tutor_id}", courseHandler.GetCoursesByTutor)
 
 	// Private Routes
     // Require Authentication
@@ -40,9 +43,7 @@ func SetupRoutes(r *chi.Mux, db *database.DBConn) {
 
 		r.Get("/validate", userHandler.Validate)
 
-		r.Get("/courses", courseHandler.GetAllCourses)
 		r.Post("/course/create", courseHandler.AddCourse)
-		r.Get("/course/{id}", courseHandler.GetCourseById)
 		r.Put("/course/{course_id}", courseHandler.UpdateCourse)
 		r.Delete("/course/{course_id}", courseHandler.DeleteCourse)
 

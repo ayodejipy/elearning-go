@@ -17,6 +17,7 @@ func UserHandler(db *database.DBConn) *Handler {
 	return &Handler{db}
 }
 
+// POST /signup
 func (con *Handler) RegisterUser(w http.ResponseWriter, r *http.Request) {
 	user := &models.User{}
 
@@ -48,6 +49,7 @@ func (con *Handler) RegisterUser(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+// POST /login
 func (con *Handler) Login(w http.ResponseWriter, r *http.Request) {
 	body := &models.User{} // var to have request body parsed json
 
@@ -104,6 +106,7 @@ func (con *Handler) Login(w http.ResponseWriter, r *http.Request) {
 
 }
 
+// GET /validate
 func (con *Handler) Validate(w http.ResponseWriter, r *http.Request) {
 	// read our user on the context
 	user := r.Context().Value("user").(models.User)
@@ -116,11 +119,11 @@ func (con *Handler) Validate(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-// 
+// GET: /becomeatutor
 func (con *Handler) BecomeTutor(w http.ResponseWriter, r *http.Request) {
 	// make an empty tutor struct
 	tutor := models.Tutors{}
-	// get user from req context
+	// get signed in user object from req context
 	user := r.Context().Value("user").(models.User)
 	
 	// add data to tutor's table

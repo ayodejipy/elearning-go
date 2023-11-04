@@ -2,6 +2,8 @@ package models
 
 import (
 	"time"
+
+	"github.com/google/uuid"
 )
 
 type Course struct {
@@ -13,5 +15,5 @@ type Course struct {
 	StartDate time.Time `json:"start_date"`
 	EndDate time.Time `json:"end_date"`
 	Price float64 `json:"price"`
-	TutorID int `json:"tutor_id"`
+	TutorID uuid.UUID `json:"tutor_id"`
 }
