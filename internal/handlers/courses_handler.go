@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/ayodejipy/elearning-go/internal/database"
@@ -168,5 +169,47 @@ func (con *Handler) GetCoursesByTutor(w http.ResponseWriter, r *http.Request) {
 		Success: true,
 		Message: "Courses fetched successfully",
 		Data: courses,
+	})
+}
+
+// GET /course/enroll/{course_id}
+func (con *Handler) EnrollForCourse(w http.ResponseWriter, r *http.Request) {
+	enroll := models.Enrollment{}
+	// get course id
+	course_id := chi.URLParam(r, "course_id");
+	// grab user from the req context
+	user := r.Context().Value("user").(models.User)
+
+	// parse course id into an int
+	courseId, err := strconv.ParseInt(course_id, 10, 64);
+	if err != nil {
+		helpers.RespondWithError(w, http.StatusBadRequest, "Failed to convert string to integar.")
+		return
+	}
+
+	// find if user has already enrolled to course
+	if err := con.DB.First(&enroll, "course_id = ? AND user_id = ?", courseId, user.ID).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			// Proceed to enroll user
+			enroll.CourseId = courseId
+			enroll.UserId = user.ID
+			enroll.EnrollmentDate = time.Now()
+		
+			// check if user has not already enrolled
+			if err := con.DB.Create(&enroll).Error; err != nil {
+				helpers.RespondWithError(w, http.StatusBadRequest, "Failed to enroll user for course")
+				return
+			}
+
+		} else {
+			helpers.RespondWithError(w, http.StatusBadRequest, "Error querying database.")
+			return
+		}
+	}
+
+	// respond with a success message
+	helpers.RespondWithJSON(w, http.StatusCreated, helpers.BaseResponse{
+		Success: true,
+		Message: "User is enrolled in the course",
 	})
 }
