@@ -34,7 +34,8 @@ func (con *Handler) RegisterUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// update password to hashed password
+	// set default role to user and update password to hashed password
+	user.Role = models.UserRole 
 	user.Password = string(hash)
 
 	// save to database
